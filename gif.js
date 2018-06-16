@@ -2,12 +2,17 @@
 var themes = ["cumbia", "salsa", "reggaeton","samba","bachata","merengue","tango","flamenco","b-boying",
             "krumping","break dancing","moonwalk","disco","hip hop","voguing","wacking","bhangra","Punjabi","ballet","belly dance"];
 var numGifs = 10;
+var offset = 0;
 
 // Display initial buttons
 renderButtons();
 
 // Adding click event listeners to all elements with a class of "theme"
-$(document).on("click", ".theme", displayGifInfo);
+$(document).on("click", ".theme", function() {
+    $("#displayGif").empty(); // When new them is selected, clear the displayed gifs,
+    offset = 0;   // reset the offset to 0
+    displayGifInfo($(this).attr("data-theme"))
+});
 
 // Add click event listners to all elemements with a class of "gifImage"
 $(document).on("click",".gifImage", toggleGif);
@@ -33,29 +38,38 @@ $("#addGif").on("click", function(event) {
 
 });  
 
+$("#moreGifs").on("click", function(event) {
+    event.preventDefault();
+    offset += 10;
+    displayGifInfo($(this).attr("data-theme"));
+});
+
 // displayGifInfo function re-renders the HTML to display the appropriate content
-function displayGifInfo() {
+function displayGifInfo(theme) {
 
-    var theme = $(this).attr("data-theme");
+    // var theme = $(this).attr("data-theme");
+    console.log("offset: "+offset)
 
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q="+theme+"&limit=10&offset=0&rating=G&lang=en&api_key=vN0hPUbQMoX4GfXB7Z2VCxoxAHOKCEg3"
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q="+theme+"&limit=10&offset="+offset+"&rating=G&lang=en&api_key=vN0hPUbQMoX4GfXB7Z2VCxoxAHOKCEg3"
 
     // Creates AJAX call for the specific gif theme button being clicked
     $.ajax({
         url: queryURL,
         method: "GET"
     }).then(function(response) {
-        $("#displayGif").empty();   
         for (var i = 0; i < numGifs; i++){
-            $("#displayGif").append("<p>Rating: "+response.data[i].rating+"</p>")
-            // $("#displayGif").append("<img src='"+response.data[i].images.fixed_height_small_still.url+"'>");
+
             var a = $("<img>");
             a.attr("src",response.data[i].images.fixed_height_small_still.url);
             a.attr("still",response.data[i].images.fixed_height_small_still.url)
             a.attr("gif",response.data[i].images.fixed_height_small.url);
             a.addClass("gifImage");
-            $("#displayGif").append(a);
+            $("#displayGif").prepend(a);
+
+            $("#displayGif").prepend("<p>Rating: "+response.data[i].rating+"</p>")
+
         }
+        $("#moreGifs").show().attr("data-theme",theme);  // Add current theme to more button
     });
 }
 
@@ -64,6 +78,7 @@ function renderButtons() {
 
     // Clear current buttons and re-render the buttons to prevent button duplication
     $("#gifButtons").empty();
+    $("#moreGifs").hide();
 
     // Loops through the array of gif themes
     for (var i = 0; i < themes.length; i++) {
