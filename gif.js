@@ -1,11 +1,16 @@
 // Global Variables
-var themes = ["boring", "snooze", "yawn"];
+var themes = ["cumbia", "salsa", "reggaeton","samba","bachata","merengue","tango","flamenco","b-boying",
+            "krumping","break dancing","moonwalk","disco","hip hop","voguing","wacking","bhangra","Punjabi","ballet","belly dance"];
+var numGifs = 10;
 
 // Display initial buttons
 renderButtons();
 
 // Adding click event listeners to all elements with a class of "theme"
 $(document).on("click", ".theme", displayGifInfo);
+
+// Add click event listners to all elemements with a class of "gifImage"
+$(document).on("click",".gifImage", toggleGif);
 
 // Handles events when the add gif button is clicked
 $("#addGif").on("click", function(event) {
@@ -31,22 +36,27 @@ $("#addGif").on("click", function(event) {
 // displayGifInfo function re-renders the HTML to display the appropriate content
 function displayGifInfo() {
 
-var theme = $(this).attr("data-theme");
-console.log(theme);
-// var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+    var theme = $(this).attr("data-theme");
 
-// Creates AJAX call for the specific gif theme button being clicked
-// $.ajax({
-    // url: queryURL,
-    // method: "GET"
-// }).then(function(response) {
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q="+theme+"&limit=10&offset=0&rating=G&lang=en&api_key=vN0hPUbQMoX4GfXB7Z2VCxoxAHOKCEg3"
 
-//     $("#gifButtons").html("<img src='"+response.Poster+"'>");
-//     $("#movies-view").append("<p>Rating: "+response.Ratings[0].Value+"</p>")
-//     $("#movies-view").append("<p>Release Date: "+response.Year+"</p>")
-//     $("#movies-view").append("<p>Plot: "+response.Plot+"</p>")
-
-// });
+    // Creates AJAX call for the specific gif theme button being clicked
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response) {
+        $("#displayGif").empty();   
+        for (var i = 0; i < numGifs; i++){
+            $("#displayGif").append("<p>Rating: "+response.data[i].rating+"</p>")
+            // $("#displayGif").append("<img src='"+response.data[i].images.fixed_height_small_still.url+"'>");
+            var a = $("<img>");
+            a.attr("src",response.data[i].images.fixed_height_small_still.url);
+            a.attr("still",response.data[i].images.fixed_height_small_still.url)
+            a.attr("gif",response.data[i].images.fixed_height_small.url);
+            a.addClass("gifImage");
+            $("#displayGif").append(a);
+        }
+    });
 }
 
 // Function for displaying gif theme buttons
@@ -54,14 +64,13 @@ function renderButtons() {
 
     // Clear current buttons and re-render the buttons to prevent button duplication
     $("#gifButtons").empty();
-    console.log(themes)
 
     // Loops through the array of gif themes
     for (var i = 0; i < themes.length; i++) {
         // Dynamicaly generate buttons for each gif theme in the array
         var a = $("<button>");
         // Add a class of theme to button
-        a.addClass("theme");
+        a.addClass("theme btn btn-primary m-1");
         // Add a data-attribute
         a.attr("data-theme", themes[i]);
         // Display initial button text
@@ -71,7 +80,12 @@ function renderButtons() {
     }   
 }
 
-
-
-
-  
+// Function to toggle between still image and gif
+function toggleGif () {
+    if ($(this).attr("src") === $(this).attr("still")) {
+        $(this).attr("src",$(this).attr("gif"));
+    }
+    else {
+        $(this).attr("src",$(this).attr("still"));
+    }
+}
