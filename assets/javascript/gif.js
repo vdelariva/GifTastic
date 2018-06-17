@@ -1,6 +1,6 @@
 // Global Variables
 var themes = ["cumbia", "salsa", "reggaeton","samba","bachata","lambada","tango","flamenco","b-boying",
-            "krumping","break dancing","moonwalk","disco","hip hop","voguing","wacking","bhangra","punjabi","ballet","belly dance"];
+            "krumping","break dancing","moonwalk","disco","voguing","hip hop","break dancing","bhangra","punjabi","ballet","belly dance"];
 var numGifs = 10;
 var offset = 0;
 
@@ -70,7 +70,7 @@ function displayGifInfo(theme) {
             a.attr("still",response.data[i].images.fixed_height_still.url)
             a.attr("gif",response.data[i].images.fixed_height.url);
             a.addClass("gifImage hover-outline");
-            $("#displayGif").prepend(a);
+            $("#displayGif").prepend(a); // Using preprend so most recent images added at the top
 
             a = response.data[i].rating;
             $("#displayGif").prepend("<h6 class=\"text-primary my-3\">Rating: "+a.toUpperCase()+"</h6>")
