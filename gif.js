@@ -1,6 +1,6 @@
 // Global Variables
-var themes = ["cumbia", "salsa", "reggaeton","samba","bachata","merengue","tango","flamenco","b-boying",
-            "krumping","break dancing","moonwalk","disco","hip hop","voguing","wacking","bhangra","Punjabi","ballet","belly dance"];
+var themes = ["cumbia", "salsa", "reggaeton","samba","bachata","lambada","tango","flamenco","b-boying",
+            "krumping","break dancing","moonwalk","disco","hip hop","voguing","wacking","bhangra","punjabi","ballet","belly dance"];
 var numGifs = 10;
 var offset = 0;
 
@@ -9,7 +9,7 @@ renderButtons();
 
 // Adding click event listeners to all elements with a class of "theme"
 $(document).on("click", ".theme", function() {
-    $("#displayGif").empty(); // When new them is selected, clear the displayed gifs,
+    $("#displayGif").empty(); // When new theme is selected, clear the displayed gifs,
     offset = 0;   // reset the offset to 0
     displayGifInfo($(this).attr("data-theme"))
 });
@@ -59,14 +59,21 @@ function displayGifInfo(theme) {
     }).then(function(response) {
         for (var i = 0; i < numGifs; i++){
 
+            // Stuff I'm trying to figure out - how to put img and p inside a div...
+            // var d = $("<div>").add("<p>Rating: "+response.data[i].rating+"</p>")
+            // console.log(d);
+            // a.add("<p>Rating: "+response.data[i].rating+"</p>")
+            // a.add("<img>");
+
             var a = $("<img>");
-            a.attr("src",response.data[i].images.fixed_height_small_still.url);
-            a.attr("still",response.data[i].images.fixed_height_small_still.url)
-            a.attr("gif",response.data[i].images.fixed_height_small.url);
-            a.addClass("gifImage");
+            a.attr("src",response.data[i].images.fixed_height_still.url);
+            a.attr("still",response.data[i].images.fixed_height_still.url)
+            a.attr("gif",response.data[i].images.fixed_height.url);
+            a.addClass("gifImage hover-outline");
             $("#displayGif").prepend(a);
 
-            $("#displayGif").prepend("<p>Rating: "+response.data[i].rating+"</p>")
+            a = response.data[i].rating;
+            $("#displayGif").prepend("<h6 class=\"text-primary my-3\">Rating: "+a.toUpperCase()+"</h6>")
 
         }
         $("#moreGifs").show().attr("data-theme",theme);  // Add current theme to more button
