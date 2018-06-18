@@ -7,4 +7,5 @@ The purpose of this assignment was to use giphy API to display gifs based on a s
 The user may also display more gifs by pressing the "Give me more!" button. The application will prepend an additional 10 gifs. When the user selects a different theme, the current displayed gifs are cleared and the new theme gifs are displayed.
 
 **Notes**
+
 Added a hover border around the gif images to indicate which gif is currently selected.
