@@ -21,3 +21,7 @@ label {
     outline: 5px solid #006dcc;
     outline-offset: 5px;
 }
+
+.card {
+    /* width: 5rem; */
+}

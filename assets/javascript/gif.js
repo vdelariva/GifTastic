@@ -59,21 +59,31 @@ function displayGifInfo(theme) {
     }).then(function(response) {
         for (var i = 0; i < numGifs; i++){
 
-            // Stuff I'm trying to figure out - how to put img and p inside a div...
-            // var d = $("<div>").add("<p>Rating: "+response.data[i].rating+"</p>")
-            // console.log(d);
-            // a.add("<p>Rating: "+response.data[i].rating+"</p>")
-            // a.add("<img>");
+            var gifDiv = $("<div class='card my-2'>");
+            var div = $("<div class='card-body'>").html("<h5 class='card-title'>" + response.data[i].title.toUpperCase() + '</h5>');
+            var ul = $("<ul class='list-group list-group-flush'>");
+            var gifImage = $("<img class='card-img-top gifImage hover-outline' alt="+theme+">");
+            gifImage.attr("src",response.data[i].images.fixed_height_small_still.url);
+            gifImage.attr("still",response.data[i].images.fixed_height_small_still.url)
+            gifImage.attr("gif",response.data[i].images.fixed_height_small.url);
+            gifDiv.append(ul);
+            ul.append("<li class='list-group-item'><strong>Source:</strong> " + response.data[i].source_tld + "<br/>")
+            div.append("<h6>Rating: " + response.data[i].rating.toUpperCase() + "</h6>")
+            gifDiv.prepend(div);
+            gifDiv.prepend(gifImage);
+            console.log(gifDiv)
+            $("#displayGif").prepend(gifDiv);
 
-            var a = $("<img>");
-            a.attr("src",response.data[i].images.fixed_height_still.url);
-            a.attr("still",response.data[i].images.fixed_height_still.url)
-            a.attr("gif",response.data[i].images.fixed_height.url);
-            a.addClass("gifImage hover-outline");
-            $("#displayGif").prepend(a); // Using preprend so most recent images added at the top
+            // Display without using cards
+            // var a = $("<img>");
+            // a.attr("src",response.data[i].images.fixed_height_still.url);
+            // a.attr("still",response.data[i].images.fixed_height_still.url)
+            // a.attr("gif",response.data[i].images.fixed_height.url);
+            // a.addClass("gifImage hover-outline");
+            // $("#displayGif").prepend(a); // Using preprend so most recent images added at the top
 
-            a = response.data[i].rating;
-            $("#displayGif").prepend("<h6 class=\"text-primary my-3\">Rating: "+a.toUpperCase()+"</h6>")
+            // a = response.data[i].rating;
+            // $("#displayGif").prepend("<h6 class=\"text-primary my-3\">Rating: "+a.toUpperCase()+"</h6>")
 
         }
         $("#moreGifs").show().attr("data-theme",theme);  // Add current theme to more button
